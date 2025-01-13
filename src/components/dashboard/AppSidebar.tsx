@@ -16,13 +16,14 @@ import {
   HelpCircle,
   LogOut,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const menuItems = [
   { title: "Dashboard", icon: Home, url: "/" },
-  { title: "Wallet", icon: Wallet, url: "#" },
-  { title: "History", icon: History, url: "#" },
-  { title: "Settings", icon: Settings, url: "#" },
-  { title: "Help", icon: HelpCircle, url: "#" },
+  { title: "Wallet", icon: Wallet, url: "/wallet" },
+  { title: "History", icon: History, url: "/history" },
+  { title: "Settings", icon: Settings, url: "/settings" },
+  { title: "Help", icon: HelpCircle, url: "/help" },
 ];
 
 export function AppSidebar() {
@@ -39,13 +40,13 @@ export function AppSidebar() {
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a
-                      href={item.url}
+                    <Link
+                      to={item.url}
                       className="flex items-center gap-3 px-3 py-2"
                     >
                       <item.icon className="h-4 w-4" />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
