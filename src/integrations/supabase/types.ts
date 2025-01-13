@@ -9,7 +9,72 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      settings: {
+        Row: {
+          email_notifications: boolean | null
+          id: string
+          transaction_notifications: boolean | null
+          two_factor_auth: boolean | null
+        }
+        Insert: {
+          email_notifications?: boolean | null
+          id?: string
+          transaction_notifications?: boolean | null
+          two_factor_auth?: boolean | null
+        }
+        Update: {
+          email_notifications?: boolean | null
+          id?: string
+          transaction_notifications?: boolean | null
+          two_factor_auth?: boolean | null
+        }
+        Relationships: []
+      }
+      transactions: {
+        Row: {
+          amount: number
+          created_at: string | null
+          description: string | null
+          id: string
+          type: string
+          wallet_address: string | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          type: string
+          wallet_address?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          type?: string
+          wallet_address?: string | null
+        }
+        Relationships: []
+      }
+      wallet_balances: {
+        Row: {
+          balance: number
+          id: string
+          last_updated: string | null
+        }
+        Insert: {
+          balance?: number
+          id?: string
+          last_updated?: string | null
+        }
+        Update: {
+          balance?: number
+          id?: string
+          last_updated?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

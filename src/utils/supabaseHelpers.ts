@@ -1,16 +1,21 @@
 import { supabase } from "@/integrations/supabase/client";
+import type { Database } from "@/integrations/supabase/types";
 
-export const fetchTransactions = async () => {
+type Transaction = Database['public']['Tables']['transactions']['Row'];
+type Settings = Database['public']['Tables']['settings']['Row'];
+type WalletBalance = Database['public']['Tables']['wallet_balances']['Row'];
+
+export const fetchTransactions = async (): Promise<Transaction[]> => {
   const { data, error } = await supabase
     .from('transactions')
     .select('*')
     .order('created_at', { ascending: false });
   
   if (error) throw error;
-  return data;
+  return data || [];
 };
 
-export const fetchWalletBalance = async () => {
+export const fetchWalletBalance = async (): Promise<number> => {
   const { data, error } = await supabase
     .from('wallet_balances')
     .select('*')
@@ -20,7 +25,7 @@ export const fetchWalletBalance = async () => {
   return data?.balance || 0;
 };
 
-export const fetchSettings = async () => {
+export const fetchSettings = async (): Promise<Settings> => {
   const { data, error } = await supabase
     .from('settings')
     .select('*')
@@ -28,17 +33,14 @@ export const fetchSettings = async () => {
   
   if (error) throw error;
   return data || {
+    id: '',
     email_notifications: false,
     two_factor_auth: false,
     transaction_notifications: false
   };
 };
 
-export const updateSettings = async (settings: {
-  email_notifications: boolean;
-  two_factor_auth: boolean;
-  transaction_notifications: boolean;
-}) => {
+export const updateSettings = async (settings: Omit<Settings, 'id'>): Promise<void> => {
   const { error } = await supabase
     .from('settings')
     .upsert(settings);
@@ -47,16 +49,16 @@ export const updateSettings = async (settings: {
 };
 
 export const addTransaction = async (transaction: {
-  type: 'deposit' | 'withdrawal';
+  type: string;
   amount: number;
   description: string;
   wallet_address: string;
-}) => {
-  const { error } = await supabase
+}): Promise<void> => {
+  const { error: transactionError } = await supabase
     .from('transactions')
     .insert(transaction);
   
-  if (error) throw error;
+  if (transactionError) throw transactionError;
 
   // Update wallet balance
   const currentBalance = await fetchWalletBalance();

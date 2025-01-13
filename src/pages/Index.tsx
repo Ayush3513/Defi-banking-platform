@@ -5,6 +5,7 @@ import { TransactionList } from "@/components/dashboard/TransactionList";
 import { BalanceChart } from "@/components/dashboard/BalanceChart";
 import { useQuery } from "@tanstack/react-query";
 import { fetchWalletBalance, fetchTransactions } from "@/utils/supabaseHelpers";
+import type { Database } from "@/integrations/supabase/types";
 import {
   Wallet,
   ArrowUpDown,
@@ -12,13 +13,15 @@ import {
   Activity,
 } from "lucide-react";
 
+type Transaction = Database['public']['Tables']['transactions']['Row'];
+
 export default function Index() {
   const { data: balance = 0 } = useQuery({
     queryKey: ['wallet-balance'],
     queryFn: fetchWalletBalance
   });
 
-  const { data: transactions = [] } = useQuery({
+  const { data: transactions = [] } = useQuery<Transaction[]>({
     queryKey: ['transactions'],
     queryFn: fetchTransactions
   });
