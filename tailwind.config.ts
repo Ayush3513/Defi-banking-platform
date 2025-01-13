@@ -52,6 +52,11 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        sidebar: "#2D2654",
+        "stat-card": {
+          from: "#F8F7FF",
+          to: "#F3F1FF",
+        },
       },
       fontFamily: {
         sans: ["Inter", "sans-serif"],

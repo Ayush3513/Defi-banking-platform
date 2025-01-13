@@ -2,8 +2,8 @@ import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
-  SidebarGroupContent,
   SidebarGroupLabel,
+  SidebarGroupContent,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -28,13 +28,13 @@ const menuItems = [
 
 export function AppSidebar() {
   return (
-    <Sidebar>
+    <Sidebar className="bg-sidebar">
       <SidebarContent>
         <div className="p-4">
-          <h1 className="text-xl font-bold">DeFiBank</h1>
+          <h1 className="text-xl font-bold text-white">DeFiBank</h1>
         </div>
         <SidebarGroup>
-          <SidebarGroupLabel>Menu</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-gray-400">Menu</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {menuItems.map((item) => (
@@ -42,7 +42,7 @@ export function AppSidebar() {
                   <SidebarMenuButton asChild>
                     <Link
                       to={item.url}
-                      className="flex items-center gap-3 px-3 py-2"
+                      className="flex items-center gap-3 px-3 py-2 text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
                     >
                       <item.icon className="h-4 w-4" />
                       <span>{item.title}</span>
@@ -54,7 +54,7 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
         <div className="mt-auto p-4">
-          <button className="flex items-center gap-2 text-red-500 hover:text-red-600 transition-colors">
+          <button className="flex items-center gap-2 text-gray-300 hover:text-red-400 transition-colors">
             <LogOut className="h-4 w-4" />
             <span>Logout</span>
           </button>

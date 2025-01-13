@@ -24,7 +24,6 @@ const transactions: Transaction[] = [
     date: "2024-02-19",
     description: "Withdrawal to 0x8765...4321",
   },
-  // Add more sample transactions as needed
 ];
 
 export function TransactionList() {
@@ -34,14 +33,14 @@ export function TransactionList() {
         {transactions.map((transaction) => (
           <div
             key={transaction.id}
-            className="flex items-center justify-between p-2 hover:bg-muted/50 rounded-lg transition-colors"
+            className="flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg transition-colors"
           >
             <div className="flex items-center space-x-4">
               <div
                 className={`p-2 rounded-full ${
                   transaction.type === "deposit"
-                    ? "bg-green-100 text-green-600"
-                    : "bg-red-100 text-red-600"
+                    ? "bg-green-50 text-green-600"
+                    : "bg-red-50 text-red-600"
                 }`}
               >
                 {transaction.type === "deposit" ? (
@@ -51,8 +50,8 @@ export function TransactionList() {
                 )}
               </div>
               <div>
-                <p className="text-sm font-medium">{transaction.description}</p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-sm font-medium text-gray-900">{transaction.description}</p>
+                <p className="text-xs text-gray-500">
                   {new Date(transaction.date).toLocaleDateString()}
                 </p>
               </div>
