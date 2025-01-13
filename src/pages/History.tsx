@@ -1,8 +1,16 @@
 import { Card } from "@/components/ui/card";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/dashboard/AppSidebar";
+import { useQuery } from "@tanstack/react-query";
+import { fetchTransactions } from "@/utils/supabaseHelpers";
+import { ArrowDownIcon, ArrowUpIcon } from "lucide-react";
 
 export default function History() {
+  const { data: transactions = [], isLoading } = useQuery({
+    queryKey: ['transactions'],
+    queryFn: fetchTransactions
+  });
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
@@ -15,20 +23,47 @@ export default function History() {
             </div>
             
             <Card className="p-6 bg-gradient-to-r from-gray-50 to-slate-50">
-              <div className="space-y-4">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="flex justify-between items-center border-b pb-4">
-                    <div>
-                      <p className="font-medium">Transfer to Wallet #{i}</p>
-                      <p className="text-sm text-muted-foreground">March {i}, 2024</p>
+              {isLoading ? (
+                <p>Loading transactions...</p>
+              ) : (
+                <div className="space-y-4">
+                  {transactions.map((transaction: any) => (
+                    <div key={transaction.id} className="flex justify-between items-center border-b pb-4">
+                      <div className="flex items-center gap-3">
+                        <div className={`p-2 rounded-full ${
+                          transaction.type === 'deposit'
+                            ? "bg-green-50 text-green-600"
+                            : "bg-red-50 text-red-600"
+                        }`}>
+                          {transaction.type === 'deposit' ? (
+                            <ArrowDownIcon className="h-4 w-4" />
+                          ) : (
+                            <ArrowUpIcon className="h-4 w-4" />
+                          )}
+                        </div>
+                        <div>
+                          <p className="font-medium">{transaction.description}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {new Date(transaction.created_at).toLocaleDateString()}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className={`font-medium ${
+                          transaction.type === 'deposit'
+                            ? "text-green-600"
+                            : "text-red-600"
+                        }`}>
+                          {transaction.type === 'deposit' ? '+' : '-'}{transaction.amount} ETH
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          ≈ ${(transaction.amount * 2000).toFixed(2)} USD
+                        </p>
+                      </div>
                     </div>
-                    <div className="text-right">
-                      <p className="font-medium">-0.5 ETH</p>
-                      <p className="text-sm text-muted-foreground">≈ $1,000 USD</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </Card>
           </div>
         </main>

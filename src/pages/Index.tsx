@@ -3,6 +3,8 @@ import { AppSidebar } from "@/components/dashboard/AppSidebar";
 import { StatCard } from "@/components/dashboard/StatCard";
 import { TransactionList } from "@/components/dashboard/TransactionList";
 import { BalanceChart } from "@/components/dashboard/BalanceChart";
+import { useQuery } from "@tanstack/react-query";
+import { fetchWalletBalance, fetchTransactions } from "@/utils/supabaseHelpers";
 import {
   Wallet,
   ArrowUpDown,
@@ -11,6 +13,19 @@ import {
 } from "lucide-react";
 
 export default function Index() {
+  const { data: balance = 0 } = useQuery({
+    queryKey: ['wallet-balance'],
+    queryFn: fetchWalletBalance
+  });
+
+  const { data: transactions = [] } = useQuery({
+    queryKey: ['transactions'],
+    queryFn: fetchTransactions
+  });
+
+  const totalTransactions = transactions.length;
+  const activeLoans = transactions.filter(t => t.type === 'withdrawal').length;
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
@@ -27,27 +42,27 @@ export default function Index() {
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
               <StatCard
                 title="Total Balance"
-                value="4.2 ETH"
+                value={`${balance} ETH`}
                 icon={<Wallet className="h-4 w-4 text-muted-foreground" />}
-                description="+20.1% from last month"
+                description={`≈ $${(balance * 2000).toFixed(2)} USD`}
               />
               <StatCard
                 title="Total Transactions"
-                value="245"
+                value={totalTransactions.toString()}
                 icon={<ArrowUpDown className="h-4 w-4 text-muted-foreground" />}
-                description="Last 30 days"
+                description="All time"
               />
               <StatCard
                 title="Active Loans"
-                value="3"
+                value={activeLoans.toString()}
                 icon={<Activity className="h-4 w-4 text-muted-foreground" />}
-                description="2 pending approval"
+                description="Current withdrawals"
               />
               <StatCard
                 title="Connected Users"
-                value="12,234"
+                value="1"
                 icon={<Users className="h-4 w-4 text-muted-foreground" />}
-                description="+180 this week"
+                description="No authentication yet"
               />
             </div>
 

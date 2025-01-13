@@ -1,36 +1,22 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ArrowDownIcon, ArrowUpIcon } from "lucide-react";
-
-interface Transaction {
-  id: string;
-  type: "deposit" | "withdrawal";
-  amount: string;
-  date: string;
-  description: string;
-}
-
-const transactions: Transaction[] = [
-  {
-    id: "1",
-    type: "deposit",
-    amount: "+0.234 ETH",
-    date: "2024-02-20",
-    description: "Deposit from 0x1234...5678",
-  },
-  {
-    id: "2",
-    type: "withdrawal",
-    amount: "-0.1 ETH",
-    date: "2024-02-19",
-    description: "Withdrawal to 0x8765...4321",
-  },
-];
+import { useQuery } from "@tanstack/react-query";
+import { fetchTransactions } from "@/utils/supabaseHelpers";
 
 export function TransactionList() {
+  const { data: transactions = [], isLoading } = useQuery({
+    queryKey: ['transactions'],
+    queryFn: fetchTransactions
+  });
+
+  if (isLoading) {
+    return <div>Loading transactions...</div>;
+  }
+
   return (
     <ScrollArea className="h-[400px] rounded-md border p-4">
       <div className="space-y-4">
-        {transactions.map((transaction) => (
+        {transactions.map((transaction: any) => (
           <div
             key={transaction.id}
             className="flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg transition-colors"
@@ -50,9 +36,11 @@ export function TransactionList() {
                 )}
               </div>
               <div>
-                <p className="text-sm font-medium text-gray-900">{transaction.description}</p>
+                <p className="text-sm font-medium text-gray-900">
+                  {transaction.description}
+                </p>
                 <p className="text-xs text-gray-500">
-                  {new Date(transaction.date).toLocaleDateString()}
+                  {new Date(transaction.created_at).toLocaleDateString()}
                 </p>
               </div>
             </div>
@@ -63,7 +51,8 @@ export function TransactionList() {
                   : "text-red-600"
               }`}
             >
-              {transaction.amount}
+              {transaction.type === "deposit" ? "+" : "-"}
+              {transaction.amount} ETH
             </div>
           </div>
         ))}
